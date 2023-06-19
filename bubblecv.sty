@@ -1,0 +1,392 @@
+%----------------------------------------------------------------------------------------
+% PARAMETERS
+%----------------------------------------------------------------------------------------
+\newcommand\packagename{bubblecv}
+\newcommand\getcvfont{ppl}
+\newcommand\getcvmainspace{0.5}
+\newcommand\getcvsidebarspace{0.5}
+\newcommand\getcvcolumnratio{0.6}
+\newcommand\getcvspcebetweencolumns{1.5}
+\newcommand\getcvheadermargin{0.5}
+\newcommand\getcveventmargin{0.2}
+\newcommand\getcveventdatesize{1.6}
+
+\newcommand\getcvavatarsize{2}
+\newcommand\getcvavatarbordersize{0.1}
+
+\newcommand\getcvmainbubblesize{0.6}
+\newcommand\getcvmainbubblebordersize{0.1}
+\newcommand\getcvsidebarbubblesize{0.6}
+\newcommand\getcvsidebarbubblebordersize{0.1}
+\newcommand\getcveventbubblesize{0.3}
+\newcommand\getceventbubblebordersize{0.1}
+
+%----------------------------------------------------------------------------------------
+% COLORS
+%----------------------------------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{cvprimarycolor}{RGB}{43, 85, 128}              % primary color
+\definecolor{cvalternativecolor}{RGB}{255, 255, 255}        % alternative color
+\definecolor{cvbordercolor}{RGB}{255, 255, 255}             % border color
+\definecolor{cvavatarbordercolor}{RGB}{255, 255, 255}       % avatar border color
+\definecolor{cvtimelinecolor}{RGB}{0, 0, 0}                 % timeline color
+\definecolor{cvaccentcolor}{RGB}{250, 150, 10}              % accent color
+\definecolor{cvdarkcolor}{RGB}{70, 70, 70}                  % dark color
+\definecolor{cvlightcolor}{RGB}{245, 245, 245}              % light color
+
+
+%========================================================================================
+% PRIVATE
+%========================================================================================
+
+%----------------------------------------------------------------------------------------
+% SETTINGS
+%----------------------------------------------------------------------------------------
+\usepackage[a4paper]{geometry}
+\geometry{top=0.5cm, bottom=1cm, left=3.5cm, right=1cm}     % setup margins
+
+\setlength{\parindent}{0cm}                                 % no indent default
+\pagenumbering{gobble}                                      % disable page numbering
+
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep, nolistsep, leftmargin=*}       % default list style
+
+%----------------------------------------------------------------------------------------
+% COMMON PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}  % for utf-8 encoding
+\usepackage{xparse}          % new document command
+\usepackage{ifthen}          % if then else
+\usepackage{tabularx}        % tabular for progress bar
+\usepackage{hyperref}        % hyper ref
+
+%----------------------------------------------------------------------------------------
+% COLUMNS
+%----------------------------------------------------------------------------------------
+\usepackage{paracol}
+\setlength{\columnsep}{\getcvspcebetweencolumns cm}     % space between columns
+\newcommand\iscvsidebar{0}                              % flag if sidebar is active
+\newcommand\iscv{0}                                     % flag if cv is active
+
+%----------------------------------------------------------------------------------------
+% FONTS & ICONS
+%----------------------------------------------------------------------------------------
+\usepackage{fontawesome}
+% allow icons to scale
+\DeclareFontFamily{U}{fontawesomeOne}{}
+\DeclareFontShape{U}{fontawesomeOne}{m}{n}{<-> FontAwesome--fontawesomeone}{}
+\DeclareRobustCommand\FAone{\fontencoding{U}\fontfamily{fontawesomeOne}\selectfont}
+
+%----------------------------------------------------------------------------------------
+% TIMELINE
+%----------------------------------------------------------------------------------------
+\usepackage{silence}
+\WarningsOff[everypage]         % disable warning about problems with background package
+\usepackage{background}
+\SetBgScale{1}
+\SetBgAngle{0}
+\SetBgColor{cvtimelinecolor}
+\SetBgContents{\rule{0.05cm}{\textheight}}
+\SetBgHshift{-7.925cm}
+
+\newcommand\getcvtimelinemargin{1.05}
+
+%----------------------------------------------------------------------------------------
+% RGB TO ARRAY
+%----------------------------------------------------------------------------------------
+% Convert RGB to decode array.
+% Parameter 1:              RGB color.
+% Parameter 2:              Variable to which the array will be assigned.
+\newcommand{\rgbtoarray}[2]{
+  \extractcolorspecs{#1}\ParseResultModel\ParseResultColor
+  \convertcolorspec\ParseResultModel\ParseResultColor{rgb}\ParseRgb
+  \let#2\@empty
+  \@for\ParseValue:=\ParseRgb\do{
+    \edef#2{
+      #2
+      \ifx#2\@empty
+      \else
+        \space
+      \fi
+      \ParseValue\space 1
+    }
+  }
+}
+
+%----------------------------------------------------------------------------------------
+% DRAW CIRCLE
+%----------------------------------------------------------------------------------------
+% Draw a circle with the image inside.
+% Parameter 1 (optional):   Path to image resource.
+% Parameter 2 (optional):   Image scale.
+% Parameter 3 (optional):   Image color in RGB.
+% Parameter 4:              Circle radius size in centimeters.
+% Parameter 5:              Circle border size in centimeters.
+% Parameter 6:              Circle color in RGB.
+% Parameter 7:              Circle radius color in RGB.
+\NewDocumentCommand{\drawcircle}{O{} O{1} O{} m m m m}{
+    \ifthenelse{\equal{#3}{}}{}{
+        \rgbtoarray{#3}\customdecodearray
+    }{}
+    \begin{tikzpicture}
+        \draw[
+            draw=#7, fill=#6, line width=#5cm,
+            path picture={
+                \ifthenelse{\equal{#1}{}}{}{
+                    \node at (path picture bounding box.center){
+                        \ifthenelse{\equal{#3}{}}{
+                            \includegraphics[
+                                width=\dimexpr#4cm*#2,
+                                height=\dimexpr#4cm*#2]{#1}
+                        }{
+                            \includegraphics[
+                                width=\dimexpr#4cm*#2,
+                                height=\dimexpr#4cm*#2,
+                                decodearray={\customdecodearray}]{#1}
+                        }
+                    };
+                }
+            }
+        ] (0,0) circle (\dimexpr#4cm-#5cm/2\relax);
+    \end{tikzpicture}
+}
+
+
+%========================================================================================
+% PUBLIC
+%========================================================================================
+
+
+%----------------------------------------------------------------------------------------
+% CV
+%----------------------------------------------------------------------------------------
+% Main CV function that prepares the entire layout.
+% Parameter 1 (optional):   Path to avatar resource.
+% Parameter 2 (optional):   Avatar size.
+% Parameter 3 (optional):   Avatar color in RGB.
+% Parameter 4:              Name.
+% Parameter 5:              Description.
+% Parameter 6:              Content.
+\NewDocumentEnvironment{cv}{O{} O{2} O{} m m +b}{
+    \fontfamily{\getcvfont}
+    
+    \unskip\hspace*{-\getcvtimelinemargin cm}
+    \unskip\hspace*{-\getcvavatarsize cm}
+    \begin{minipage}{\dimexpr(\getcvavatarsize cm + \getcvavatarsize cm + \fboxsep)}
+        \protect\ifthenelse{\equal{#1}{}}
+            {\drawcircle{\getcvavatarsize}{\getcvavatarbordersize}{cvprimarycolor}{cvavatarbordercolor}}
+            {\drawcircle[resources/#1][#2][#3]{\getcvavatarsize}{\getcvavatarbordersize}{cvprimarycolor}{cvavatarbordercolor}}
+    \end{minipage}
+    \unskip\hspace*{\getcvheadermargin cm}  
+    \begin{minipage}{\dimexpr(\linewidth + \getcvtimelinemargin cm - \getcvavatarsize cm - \getcvheadermargin cm - \fboxsep)}
+        {\Huge #4}
+        \cvseparator[3]
+        {\Large #5}
+    \end{minipage}
+    
+    \columnratio{\getcvcolumnratio}
+    
+    \begin{paracol}{2}
+        #6
+    \end{paracol}
+}{}
+
+%----------------------------------------------------------------------------------------
+% CV SECTION
+%----------------------------------------------------------------------------------------
+% Groups events, items and skills inside one block.
+% Parameter 1 (optional):   Path to icon resource.
+% Parameter 2 (optional):   Icon scale.
+% Parameter 3 (optional):   Icon color in RGB.
+% Parameter 4:              Section title.
+\NewDocumentCommand{\cvsection}{O{} O{1} O{cvalternativecolor} m}{
+    \ifthenelse{\equal{\iscvsidebar}{0}}{
+        \vspace{\getcvmainspace cm}
+        \unskip\hspace*{-\getcvtimelinemargin cm}
+        \unskip\hspace*{-\getcvmainbubblesize cm}
+        \unskip\hspace*{0.045 cm}
+        \begin{minipage}{\dimexpr(\getcvmainbubblesize cm + \getcvmainbubblesize cm + \fboxsep)}
+            \ifthenelse{\equal{#1}{}}
+                {\protect\drawcircle{\getcvmainbubblesize}{\getcvmainbubblebordersize}{cvprimarycolor}{cvbordercolor}}
+                {\protect\drawcircle[resources/#1][#2][#3]{\getcvmainbubblesize}{\getcvmainbubblebordersize}{cvprimarycolor}{cvbordercolor}}
+        \end{minipage}
+        \unskip\hspace*{\getcveventmargin cm}
+        \begin{minipage}{\dimexpr(\linewidth + \getcvtimelinemargin cm - \getcvmainbubblesize cm - \getcveventmargin cm - \fboxsep)}
+            {\LARGE\textbf{#4}}
+        \end{minipage}
+        \par
+    }{
+        \vspace{\getcvsidebarspace cm}
+        \unskip\hspace*{-\getcvsidebarbubblesize cm}
+        \unskip\hspace*{-\fboxsep}
+        \begin{minipage}{\dimexpr(\getcvsidebarbubblesize cm + \getcvsidebarbubblesize cm + \fboxsep)}
+            \protect\ifthenelse{\equal{#1}{}}
+                {\drawcircle{\getcvsidebarbubblesize}{\getcvsidebarbubblebordersize}{cvprimarycolor}{cvbordercolor}}
+                {\drawcircle[resources/#1][#2][#3]{\getcvsidebarbubblesize}{\getcvsidebarbubblebordersize}{cvprimarycolor}{cvbordercolor}}
+        \end{minipage}
+        \begin{minipage}{\dimexpr(\linewidth - \getcvsidebarbubblesize cm - \fboxsep - \fboxsep)}
+            {\LARGE\textbf{#4}}
+        \end{minipage}
+        \cvseparator
+    }
+}
+
+%----------------------------------------------------------------------------------------
+% CV EVENT
+%----------------------------------------------------------------------------------------
+% Contains information about the event.
+% Parameter 1 (optional):   Date of the event (ending).
+% Parameter 2 (optional):   Start date of the event.
+% Parameter 3:              Content.
+\NewDocumentEnvironment{cvevent}{O{} O{} +b}{
+    \ifthenelse{\equal{\iscvsidebar}{0}}{
+        \vspace{\getcvmainspace cm}
+        \unskip\hspace*{-\getcveventbubblesize cm}
+        \unskip\hspace*{-\getcvtimelinemargin cm}
+        \unskip\hspace*{-\getcveventdatesize cm}
+        \unskip\hspace*{-0.03 cm}
+        \begin{minipage}[t]{\getcveventdatesize cm}
+            \begin{center}
+                \ifthenelse{\equal{#1}{}}{}{
+                    \textbf{#1}\\
+                }
+                \ifthenelse{\equal{#2}{}}{}{
+                    \textbf{$\uparrow$}\\
+                    \textbf{#2}\\
+                }
+            \end{center}
+        \end{minipage}
+        \begin{minipage}{\dimexpr(\getcveventbubblesize cm + \getcveventbubblesize cm + \fboxsep)}
+            \protect\drawcircle{\getcveventbubblesize}{\getceventbubblebordersize}{cvprimarycolor}{cvbordercolor}
+        \end{minipage}
+        \unskip\hspace*{\dimexpr(\getcveventmargin cm + \getcvmainbubblesize cm - \getcveventbubblesize cm)}
+        \begin{minipage}[t]{\dimexpr(\linewidth + \getcvtimelinemargin cm - \getcveventmargin cm - \getcvmainbubblesize cm - \fboxsep)} 
+            #3
+        \end{minipage}
+        \par
+    }{
+        \PackageError{\packagename}{The cvevent can be used only in the main column}{}
+    }
+}{}
+
+%----------------------------------------------------------------------------------------
+% CV SIDEBAR
+%----------------------------------------------------------------------------------------
+% Switches the main column to the sidebar.
+\newcommand{\cvsidebar}[0]{
+    \ifthenelse{\equal{\iscvsidebar}{0}}{
+        \switchcolumn
+        \renewcommand{\iscvsidebar}{1}
+    }{
+        \PackageError{\packagename}{The cvsidebar can be used only once}{}
+    }
+}
+
+%----------------------------------------------------------------------------------------
+% CV SEPARATOR
+%----------------------------------------------------------------------------------------
+% Vertical space between paragraphs.
+% Parameter 1 (optional):   Space size in millimeters.
+\NewDocumentCommand{\cvseparator}{O{1}}{\vspace{#1mm}\par}
+
+%----------------------------------------------------------------------------------------
+% CV NAME
+%----------------------------------------------------------------------------------------
+% The title of the event header.
+% Parameter 1:              Event title.
+\newcommand{\cvname}[1]{{\large\textbf{#1}}\cvseparator}
+
+%----------------------------------------------------------------------------------------
+% CV DESCRIPTION
+%----------------------------------------------------------------------------------------
+% The description of the event header.
+% Parameter 1:              Event description.
+\newcommand{\cvdescription}[1]{\textbf{\textit{#1}}\cvseparator[2]}
+
+%----------------------------------------------------------------------------------------
+% CV ITEM
+%----------------------------------------------------------------------------------------
+% List item with a label.
+% Parameter 1 (optional):   Icon name from fontawesome package.
+% Parameter 2 (optional):   Icon scale in range [0, 1].
+% Parameter 3:              Content.
+\NewDocumentEnvironment{cvitem}{O{Circle} O{0.5} +b}{
+    \ifthenelse{\equal{\iscvsidebar}{1}}{
+        \begin{minipage}{\dimexpr(#2cm + \fboxsep)}
+            \makebox(0, 0){\textcolor{cvprimarycolor}{\fontsize{#2\linewidth)}{#2\linewidth)}\csname fa#1\endcsname}}
+        \end{minipage}
+        \begin{minipage}{\dimexpr(\linewidth - #2cm - \fboxsep)}
+            #3
+        \end{minipage}
+        \par
+    }{
+        \PackageError{\packagename}{The cvitem can be used only in the sidebar column}{}
+    }
+}{}
+
+%----------------------------------------------------------------------------------------
+% CV SKILL
+%----------------------------------------------------------------------------------------
+% Renders a progress-bar to indicate a certain skill in percent.
+% Parameter 1:              Name of skill.
+% Parameter 2:              Skill level.
+% Parameter 3:              Percent of the progress-bar in range [0, 1].
+\newcommand{\cvskill}[3] {
+    \ifthenelse{\equal{\iscvsidebar}{1}}{
+	\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X}
+ 		\textcolor{black}{\textbf{#1}} & \textcolor{cvprimarycolor}{#2} \\
+	\end{tabularx}
+	
+	\begin{tikzpicture}[scale=1,rounded corners=2pt,very thin]
+		\fill [cvlightcolor] (0,0) rectangle (1\linewidth, 0.15);
+		\fill [cvprimarycolor] (0,0) rectangle (#3\linewidth, 0.15);
+  	\end{tikzpicture}
+	\par\cvseparator[2]
+    }{
+        \PackageError{\packagename}{The cvskill can be used only in the sidebar column}{}
+    }
+}
+
+%----------------------------------------------------------------------------------------
+% CV FOOTNOTE
+%----------------------------------------------------------------------------------------
+% Footnote without order number and hyperlink.
+% Parameter 1:              Footnote content.
+\newcommand\cvfootnote[1]{
+  \begingroup
+  \renewcommand\thefootnote{}\NoHyper\footnote{#1}
+  \addtocounter{footnote}{-1}
+  \endgroup
+}
+
+%----------------------------------------------------------------------------------------
+% CV FONT
+%----------------------------------------------------------------------------------------
+% Change font family.
+% Parameter 1:              Font code.
+\newcommand{\cvfont}[1]{\renewcommand{\getcvfont}[0]{#1}}
+
+%----------------------------------------------------------------------------------------
+% CV MAIN SPACING
+%----------------------------------------------------------------------------------------
+% Spacing between elements in main column.
+% Parameter 1:              Main column spacing in centimeters.
+\newcommand{\cvmainspacing}[1]{
+    \renewcommand{\getcvmainspace}[0]{#1}
+}
+
+%----------------------------------------------------------------------------------------
+% CV SIDEBAR SPACING
+%----------------------------------------------------------------------------------------
+% Spacing between elements in sidebar column.
+% Parameter 1:              Sidebar column spacing in centimeters.
+\newcommand{\cvsidebarspacing}[1]{
+    \renewcommand{\getcvsidebarspace}[0]{#1}
+}
+
+%----------------------------------------------------------------------------------------
+% CV COLUMN RATIO
+%----------------------------------------------------------------------------------------
+% Change column ratio.
+% Parameter 1:              New ratio in range [0, 1].
+\newcommand{\cvcolumnratio}[1]{\renewcommand{\getcvcolumnratio}[0]{#1}}
