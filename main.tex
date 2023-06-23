@@ -1,17 +1,14 @@
 \documentclass{article}
 \usepackage{bubblecv}
 
-\cvmainspacing{0.25}
-\cvsidebarspacing{0.3}
-\cvcolumnratio{0.63}
-\definecolor{cvprimarycolor}{RGB}{20, 20, 20}
-
 \begin{document}
+
 
 \begin{cv}[avatar]{James Bond}{Secret Agent}
 
 
 \cvsection[summary]{Profile}  %-----------------------------------------------------------
+
 Highly skilled secret agent with a license to kill. 
 Bringing together outstanding combat and intelligence abilities with a charismatic and persuasive personality. 
 A dedicated and adaptable professional committed to global security.
@@ -19,7 +16,7 @@ A dedicated and adaptable professional committed to global security.
 
 \cvsection[work]{Work experience}  %------------------------------------------------------
 
-\begin{cvevent}[present][1962]
+\begin{cvevent}[1962][present]
     \cvname{Secret Agent}
     \cvdescription{MI6 Intelligence Agency, London}
     \begin{itemize}
@@ -33,7 +30,7 @@ A dedicated and adaptable professional committed to global security.
 
 \cvsection[education]{Education}  %------------------------------------------------------
 
-\begin{cvevent}[1962][1958]
+\begin{cvevent}[1958][1962]
     \cvname{Intelligence Academy}
     \cvdescription{MI6 Training Facility, London}
     \textbf{Courses and Achievements:}
@@ -48,22 +45,24 @@ A dedicated and adaptable professional committed to global security.
 
 \cvsection[target]{Missions}  %----------------------------------------------------------
 
-
 \begin{cvevent}[2002]
     \cvname{Die Another Day}
     Uncovered a North Korean general's plan to use a satellite weapon to create a war between North and South Korea.
 \end{cvevent}
 
+\cvseparator[2]
 \begin{cvevent}[1999]
     \cvname{The World Is Not Enough}
     Protected an oil heiress from a terrorist plotting to exploit her family's resources and trigger a global meltdown.
 \end{cvevent}
 
+\cvseparator[2]
 \begin{cvevent}[1997]
     \cvname{Tomorrow Never Dies}
     Investigated a media mogul's plot to provoke a war between the UK and China for increased ratings and power.
 \end{cvevent}
 
+\cvseparator[2]
 \begin{cvevent}[1995]
     \cvname{GoldenEye}
     Prevented the use of the GoldenEye satellite weapon system by a rogue agent to cause global financial chaos.
@@ -72,27 +71,28 @@ A dedicated and adaptable professional committed to global security.
 
 \cvsidebar %-----------------------------------------------------------------------------
 
+
 \cvsection[contact]{Contact}  %----------------------------------------------------------
 
-\begin{cvitem}[Envelope][0.6]
+\begin{cvitem}[Envelope][4]
     \textbf{Email}\\
     \href{mailto:james.bond@mi6.gov}{\texttt{james.bond@mi6.gov}}
 \end{cvitem}
 
 \cvseparator[3]
-\begin{cvitem}[Phone][0.6]
+\begin{cvitem}[Phone][4]
     \textbf{Phone}\\
     \href{tel:+442071234567}{\texttt{+44 207 123 4567}}
 \end{cvitem}
 
 \cvseparator[3]
-\begin{cvitem}[Home][0.6]
+\begin{cvitem}[Home][4]
     \textbf{Address}\\
     MI6 Headquarters\\ London, United Kingdom
 \end{cvitem}
 
 \cvseparator[3]
-\begin{cvitem}[Globe][0.6]
+\begin{cvitem}[Globe][4]
     \textbf{Website}\\
     \href{https://www.mi6.gov.uk}{\texttt{www.mi6.gov.uk}}
 \end{cvitem}
@@ -141,6 +141,7 @@ A dedicated and adaptable professional committed to global security.
 
 
 \cvsection[languages]{Languages}  %--------------------------------------------------------
+
 \cvskill{English}{Fluent}{1.0}
 \cvskill{French}{Intermediate}{0.6}
 \cvskill{Russian}{Basic}{0.3}
@@ -153,3 +154,4 @@ A dedicated and adaptable professional committed to global security.
 }
 
 \end{document}
+
