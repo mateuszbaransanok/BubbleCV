@@ -1,9 +1,9 @@
 %========================================================================================
-% Parameters
+% PARAMETERS
 %========================================================================================
 
 %----------------------------------------------------------------------------------------
-% GLOBAL
+% CV SCALE
 %----------------------------------------------------------------------------------------
 \newcommand\cvscale{1}
 
@@ -58,7 +58,7 @@
 \newcommand\cvsidebarspace{3}
 \newcommand\cvsidebarbubbleradius{6}
 \newcommand\cvsidebarbubbleborderwidth{1}
-\newcommand\cvsitebaroffset{2}
+\newcommand\cvsidebaroffset{2}
 
 %----------------------------------------------------------------------------------------
 % COLUMN
@@ -75,14 +75,11 @@
 % COLORS
 %----------------------------------------------------------------------------------------
 \usepackage{xcolor}
-
-\definecolor{cvprimarycolor}{RGB}{20, 20, 20}               % primary color
-\definecolor{cvalternativecolor}{RGB}{255, 255, 255}        % alternative color
+\definecolor{cvcolor}{RGB}{20, 20, 20}                      % main color
+\definecolor{cviconcolor}{RGB}{255, 255, 255}               % icon color
 \definecolor{cvbordercolor}{RGB}{255, 255, 255}             % border color
 \definecolor{cvavatarbordercolor}{RGB}{255, 255, 255}       % avatar border color
 \definecolor{cvtimelinecolor}{RGB}{0, 0, 0}                 % timeline color
-\definecolor{cvaccentcolor}{RGB}{250, 150, 10}              % accent color
-\definecolor{cvdarkcolor}{RGB}{70, 70, 70}                  % dark color
 \definecolor{cvlightcolor}{RGB}{245, 245, 245}              % light color
 
 %========================================================================================
@@ -135,7 +132,6 @@
 \usepackage{paracol}
 \setlength{\columnsep}{\cvspacebetweencolumns mm}       % space between columns
 \newcommand\iscvsidebar{0}                              % flag if sidebar is active
-\newcommand\iscv{0}                                     % flag if cv is active
 
 %----------------------------------------------------------------------------------------
 % FONTS & ICONS
@@ -157,13 +153,13 @@
 \SetBgAngle{0}
 \SetBgColor{cvtimelinecolor}
 \SetBgContents{\rule{\cvtimelinewidth mm}{\textheight}}
+% start offset from left edge of a4 paper instead of center
 \SetBgHshift{\dimexpr(\cvtimelineoffset mm - 105 mm)}
 \newcommand{\timelinespace}{\the\numexpr\cvleftmargin - \cvtimelineoffset\relax}
 
 %----------------------------------------------------------------------------------------
 % FOOTNOTE
 %----------------------------------------------------------------------------------------
-% \addtolength{\skip\footins}{-12pt}
 \setlength{\skip\footins}{0.25\baselineskip}
 
 %----------------------------------------------------------------------------------------
@@ -197,8 +193,8 @@
 % Parameter 3 (optional):   Image color in RGB.
 % Parameter 4:              Circle radius in millimeters.
 % Parameter 5:              Circle border width in millimeters.
-% Parameter 6:              Circle color in RGB.
-% Parameter 7:              Circle radius color in RGB.
+% Parameter 6:              Circle background color in RGB.
+% Parameter 7:              Circle border color in RGB.
 \NewDocumentCommand{\drawcircle}{O{} O{1} O{} m m m m}{%
     \ifthenelse{\equal{#3}{}}{}{%
         \rgbtoarray{#3}\customdecodearray%
@@ -247,8 +243,8 @@
     \hspace*{-\cvavatarradius mm}%
     \begin{minipage}{\dimexpr(\cvavatarradius mm + \cvavatarradius mm)}%
         \protect\ifthenelse{\equal{#1}{}}%
-            {\drawcircle{\cvavatarradius}{\cvavatarborderwidth}{cvprimarycolor}{cvavatarbordercolor}}%
-            {\drawcircle[resources/#1][#2][#3]{\cvavatarradius}{\cvavatarborderwidth}{cvprimarycolor}{cvavatarbordercolor}}%
+            {\drawcircle{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
+            {\drawcircle[resources/#1][#2][#3]{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
     \end{minipage}%
     \hspace*{\cvheaderoffset mm}%
     \begin{minipage}{\dimexpr(\linewidth + \timelinespace mm - \cvavatarradius mm - \cvheaderoffset mm)}%
@@ -272,15 +268,15 @@
 % Parameter 2 (optional):   Icon scale.
 % Parameter 3 (optional):   Icon color in RGB.
 % Parameter 4:              Section title.
-\NewDocumentCommand{\cvsection}{O{} O{1} O{cvalternativecolor} m}{%
+\NewDocumentCommand{\cvsection}{O{} O{1} O{cviconcolor} m}{%
     \ifthenelse{\equal{\iscvsidebar}{0}}{%
         \vspace*{\cvmainspace mm}%
         \hspace*{-\timelinespace mm}%
         \hspace*{-\cvmainbubbleradius mm}%
         \begin{minipage}{\dimexpr(\cvmainbubbleradius mm + \cvmainbubbleradius mm)}%
             \ifthenelse{\equal{#1}{}}%
-                {\protect\drawcircle{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvprimarycolor}{cvbordercolor}}%
-                {\protect\drawcircle[resources/#1][#2][#3]{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvprimarycolor}{cvbordercolor}}%
+                {\protect\drawcircle{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
+                {\protect\drawcircle[resources/#1][#2][#3]{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
         \hspace*{\dimexpr(\timelinespace mm - \cvmainbubbleradius mm)}%
         \begin{minipage}{\linewidth}%
@@ -292,11 +288,11 @@
         \hspace*{-\cvsidebarbubbleradius mm}%
         \begin{minipage}{\dimexpr(\cvsidebarbubbleradius mm + \cvsidebarbubbleradius mm)}%
             \protect\ifthenelse{\equal{#1}{}}%
-                {\drawcircle{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvprimarycolor}{cvbordercolor}}%
-                {\drawcircle[resources/#1][#2][#3]{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvprimarycolor}{cvbordercolor}}%
+                {\drawcircle{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
+                {\drawcircle[resources/#1][#2][#3]{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
-        \hspace*{\cvsitebaroffset mm}%
-        \begin{minipage}{\dimexpr(\linewidth - \cvsidebarbubbleradius mm - \cvsitebaroffset mm)}%
+        \hspace*{\cvsidebaroffset mm}%
+        \begin{minipage}{\dimexpr(\linewidth - \cvsidebarbubbleradius mm - \cvsidebaroffset mm)}%
             \textscale{\cvsectionfontscale}{\textbf{#4}}%
         \end{minipage}%
         \cvseparator%
@@ -329,7 +325,7 @@
             \end{center}%
         \end{minipage}%
         \begin{minipage}{\dimexpr(\cveventbubbleradius mm + \cveventbubbleradius mm)}%
-            \protect\drawcircle{\cveventbubbleradius}{\cveventbubbleborderwidth}{cvprimarycolor}{cvbordercolor}%
+            \protect\drawcircle{\cveventbubbleradius}{\cveventbubbleborderwidth}{cvcolor}{cvbordercolor}%
         \end{minipage}%
         \hspace*{\dimexpr(\timelinespace mm - \cveventbubbleradius mm)}%
         \begin{minipage}[t]{\linewidth}%
@@ -379,15 +375,15 @@
 %----------------------------------------------------------------------------------------
 % List item with a label.
 % Parameter 1 (optional):   Icon name from fontawesome package.
-% Parameter 2 (optional):   Icon diameter in milimeters.
+% Parameter 2 (optional):   Icon size in milimeters.
 % Parameter 3:              Content.
 \NewDocumentEnvironment{cvitem}{O{Circle} O{2.5} +b}{%
     \ifthenelse{\equal{\iscvsidebar}{1}}{%
         \begin{minipage}{\cvscale\dimexpr#2mm\relax}%
-            \makebox(0, 0){\textcolor{cvprimarycolor}{\fontsize{\cvscale\dimexpr#2mm\relax}{\cvscale\dimexpr#2mm\relax}\csname fa#1\endcsname}}%
+            \makebox(0, 0){\textcolor{cvcolor}{\fontsize{\cvscale\dimexpr#2mm\relax}{\cvscale\dimexpr#2mm\relax}\csname fa#1\endcsname}}%
         \end{minipage}%
-        \hspace*{\cvsitebaroffset mm}%
-        \begin{minipage}{\dimexpr(\linewidth - \cvsitebaroffset mm - \cvscale\dimexpr#2mm\relax)}%
+        \hspace*{\cvsidebaroffset mm}%
+        \begin{minipage}{\dimexpr(\linewidth - \cvsidebaroffset mm - \cvscale\dimexpr#2mm\relax)}%
             #3%
         \end{minipage}%
     }{%
@@ -402,15 +398,15 @@
 % Parameter 1:              Name of skill.
 % Parameter 2:              Skill level.
 % Parameter 3:              Percent of the progress-bar in range [0, 1].
-\newcommand{\cvskill}[3] {%
+\newcommand{\cvskill}[3]{%
     \ifthenelse{\equal{\iscvsidebar}{1}}{%
 	\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}X}%
- 		\textcolor{black}{\textbf{#1}} & \textcolor{cvprimarycolor}{#2} \\%
+ 		\textcolor{black}{\textbf{#1}} & \textcolor{cvcolor}{#2}%
 	\end{tabularx}%
 	
 	\begin{tikzpicture}[scale=1,rounded corners=\cvscale*0.5mm,very thin]%
 		\fill [cvlightcolor] (0,0) rectangle (\linewidth, 0.15*\cvscale);%
-		\fill [cvprimarycolor] (0,0) rectangle (#3\linewidth, 0.15*\cvscale);%
+		\fill [cvcolor] (0,0) rectangle (#3\linewidth, 0.15*\cvscale);%
   	\end{tikzpicture}%
 	\cvseparator[2]%
     }{%
