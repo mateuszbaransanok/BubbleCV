@@ -239,14 +239,14 @@
     \relscale{\cvscale}%
     \fontfamily{\cvfont}%
     
-    \hspace*{-\timelinespace mm}%
-    \hspace*{-\cvavatarradius mm}%
+    \hspace{-\timelinespace mm}%
+    \hspace{-\cvavatarradius mm}%
     \begin{minipage}{\dimexpr(\cvavatarradius mm + \cvavatarradius mm)}%
         \protect\ifthenelse{\equal{#1}{}}%
             {\drawcircle{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
             {\drawcircle[resources/#1][#2][#3]{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
     \end{minipage}%
-    \hspace*{\cvheaderoffset mm}%
+    \hspace{\cvheaderoffset mm}%
     \begin{minipage}{\dimexpr(\linewidth + \timelinespace mm - \cvavatarradius mm - \cvheaderoffset mm)}%
         \textscale{\cvheadertitlefontscale}{#4}%
         \cvseparator[3]%
@@ -270,28 +270,28 @@
 % Parameter 4:              Section title.
 \NewDocumentCommand{\cvsection}{O{} O{1} O{cviconcolor} m}{%
     \ifthenelse{\equal{\iscvsidebar}{0}}{%
-        \vspace*{\cvmainspace mm}%
-        \hspace*{-\timelinespace mm}%
-        \hspace*{-\cvmainbubbleradius mm}%
+        \vspace{\cvmainspace mm}%
+        \hspace{-\timelinespace mm}%
+        \hspace{-\cvmainbubbleradius mm}%
         \begin{minipage}{\dimexpr(\cvmainbubbleradius mm + \cvmainbubbleradius mm)}%
             \ifthenelse{\equal{#1}{}}%
                 {\protect\drawcircle{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
                 {\protect\drawcircle[resources/#1][#2][#3]{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
-        \hspace*{\dimexpr(\timelinespace mm - \cvmainbubbleradius mm)}%
+        \hspace{\dimexpr(\timelinespace mm - \cvmainbubbleradius mm)}%
         \begin{minipage}{\linewidth}%
             \textscale{\cvsectionfontscale}{\textbf{#4}}%
         \end{minipage}%
         \cvseparator%
     }{%
-        \vspace*{\cvsidebarspace mm}%
-        \hspace*{-\cvsidebarbubbleradius mm}%
+        \vspace{\cvsidebarspace mm}%
+        \hspace{-\cvsidebarbubbleradius mm}%
         \begin{minipage}{\dimexpr(\cvsidebarbubbleradius mm + \cvsidebarbubbleradius mm)}%
             \protect\ifthenelse{\equal{#1}{}}%
                 {\drawcircle{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
                 {\drawcircle[resources/#1][#2][#3]{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
-        \hspace*{\cvsidebaroffset mm}%
+        \hspace{\cvsidebaroffset mm}%
         \begin{minipage}{\dimexpr(\linewidth - \cvsidebarbubbleradius mm - \cvsidebaroffset mm)}%
             \textscale{\cvsectionfontscale}{\textbf{#4}}%
         \end{minipage}%
@@ -308,9 +308,9 @@
 % Parameter 3:              Content.
 \NewDocumentEnvironment{cvevent}{O{} O{} +b}{%
     \ifthenelse{\equal{\iscvsidebar}{0}}{%
-        \hspace*{-\cveventbubbleradius mm}%
-        \hspace*{-\timelinespace mm}%
-        \hspace*{-\cveventdatewidth mm}%
+        \hspace{-\cveventbubbleradius mm}%
+        \hspace{-\timelinespace mm}%
+        \hspace{-\cveventdatewidth mm}%
         \begin{minipage}[t]{\cveventdatewidth mm}%
             \begin{center}%
                 \ifthenelse{\equal{#2}{}}{%
@@ -327,10 +327,11 @@
         \begin{minipage}{\dimexpr(\cveventbubbleradius mm + \cveventbubbleradius mm)}%
             \protect\drawcircle{\cveventbubbleradius}{\cveventbubbleborderwidth}{cvcolor}{cvbordercolor}%
         \end{minipage}%
-        \hspace*{\dimexpr(\timelinespace mm - \cveventbubbleradius mm)}%
+        \hspace{\dimexpr(\timelinespace mm - \cveventbubbleradius mm)}%
         \begin{minipage}[t]{\linewidth}%
             #3%
         \end{minipage}%
+        \par%
     }{%
         \PackageError{\packagename}{The cvevent can be used only in the main column}{}%
     }%
@@ -341,7 +342,7 @@
 %----------------------------------------------------------------------------------------
 % Vertical space between paragraphs.
 % Parameter 1 (optional):   Space size in millimeters.
-\NewDocumentCommand{\cvseparator}{O{1}}{\vspace*{#1\dimexpr\cvseparatorscale mm\relax}\par}
+\NewDocumentCommand{\cvseparator}{O{1}}{\vspace{#1\dimexpr\cvseparatorscale mm\relax}\par}
 
 %----------------------------------------------------------------------------------------
 % CV NAME
@@ -382,10 +383,11 @@
         \begin{minipage}{\cvscale\dimexpr#2mm\relax}%
             \makebox(0, 0){\textcolor{cvcolor}{\fontsize{\cvscale\dimexpr#2mm\relax}{\cvscale\dimexpr#2mm\relax}\csname fa#1\endcsname}}%
         \end{minipage}%
-        \hspace*{\cvsidebaroffset mm}%
+        \hspace{\cvsidebaroffset mm}%
         \begin{minipage}{\dimexpr(\linewidth - \cvsidebaroffset mm - \cvscale\dimexpr#2mm\relax)}%
             #3%
         \end{minipage}%
+        \par%
     }{%
         \PackageError{\packagename}{The cvitem can be used only in the sidebar column}{}%
     }%
