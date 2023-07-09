@@ -20,8 +20,9 @@
 %----------------------------------------------------------------------------------------
 % MARGIN
 %----------------------------------------------------------------------------------------
-\newcommand\cvtopmargin{5}
-\newcommand\cvbottommargin{5}
+\newcommand\cvheadermargin{5}
+\newcommand\cvtopmargin{10}
+\newcommand\cvbottommargin{10}
 \newcommand\cvleftmargin{35}
 \newcommand\cvrightmargin{10}
 
@@ -111,6 +112,7 @@
 \usepackage[a4paper]{geometry}
 \geometry{top=\cvtopmargin mm, bottom=\cvbottommargin mm, left=\cvleftmargin mm, right=\cvrightmargin mm}
 
+\setlength{\topskip}{0mm}                                   % no top margin default
 \setlength{\parindent}{0mm}                                 % no indent default
 \pagenumbering{gobble}                                      % disable page numbering
 
@@ -239,6 +241,8 @@
     \relscale{\cvscale}%
     \fontfamily{\cvfont}%
     
+    \vspace*{\cvheadermargin mm}%
+    \vspace*{-\cvtopmargin mm}%
     \hspace{-\timelinespace mm}%
     \hspace{-\cvavatarradius mm}%
     \begin{minipage}{\dimexpr(\cvavatarradius mm + \cvavatarradius mm)}%
