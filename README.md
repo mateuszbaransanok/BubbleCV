@@ -48,3 +48,13 @@ Open the template in [Overleaf](https://www.overleaf.com/latex/templates/bubblec
 
 This CV template is provided under the [Creative Commons CC BY 4.0](LICENSE) license. You are free to use, modify, and distribute the template for personal or professional purposes, as long as you acknowledge the original source.
 
+
+## Contribution
+
+Contributions are very welcome.
+Please ensure the proposed feature/bugfix works fine with pdflatex engine before you submit a merge request.
+
+
+## Issues
+
+If you encounter any problems, please leave [issue](../../issues/new), along with a detailed description.
