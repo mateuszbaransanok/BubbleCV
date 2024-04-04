@@ -77,7 +77,6 @@
 %----------------------------------------------------------------------------------------
 \usepackage{xcolor}
 \definecolor{cvcolor}{RGB}{20, 20, 20}                      % main color
-\definecolor{cviconcolor}{RGB}{255, 255, 255}               % icon color
 \definecolor{cvbordercolor}{RGB}{255, 255, 255}             % border color
 \definecolor{cvavatarbordercolor}{RGB}{255, 255, 255}       % avatar border color
 \definecolor{cvtimelinecolor}{RGB}{0, 0, 0}                 % timeline color
@@ -165,62 +164,29 @@
 \setlength{\skip\footins}{0.25\baselineskip}
 
 %----------------------------------------------------------------------------------------
-% RGB TO ARRAY
-%----------------------------------------------------------------------------------------
-% Convert RGB to decode array.
-% Parameter 1:              RGB color.
-% Parameter 2:              Variable to which the array will be assigned.
-\newcommand{\rgbtoarray}[2]{%
-  \extractcolorspecs{#1}\ParseResultModel\ParseResultColor%
-  \convertcolorspec\ParseResultModel\ParseResultColor{rgb}\ParseRgb%
-  \let#2\@empty%
-  \@for\ParseValue:=\ParseRgb\do{%
-    \edef#2{%
-      #2%
-      \ifx#2\@empty%
-      \else%
-        \space%
-      \fi%
-      \ParseValue\space 1%
-    }%
-  }%
-}%
-
-%----------------------------------------------------------------------------------------
 % DRAW CIRCLE
 %----------------------------------------------------------------------------------------
 % Draw a circle with the image inside.
 % Parameter 1 (optional):   Path to image resource.
 % Parameter 2 (optional):   Image scale.
-% Parameter 3 (optional):   Image color in RGB.
-% Parameter 4:              Circle radius in millimeters.
-% Parameter 5:              Circle border width in millimeters.
-% Parameter 6:              Circle background color in RGB.
-% Parameter 7:              Circle border color in RGB.
-\NewDocumentCommand{\drawcircle}{O{} O{1} O{} m m m m}{%
-    \ifthenelse{\equal{#3}{}}{}{%
-        \rgbtoarray{#3}\customdecodearray%
-    }{}%
+% Parameter 3:              Circle radius in millimeters.
+% Parameter 4:              Circle border width in millimeters.
+% Parameter 5:              Circle background color in RGB.
+% Parameter 6:              Circle border color in RGB.
+\NewDocumentCommand{\drawcircle}{O{} O{1} m m m m}{%
     \begin{tikzpicture}%
         \draw[%
-            draw=#7, fill=#6, line width=#5mm,%
+            draw=#6, fill=#5, line width=#4mm,%
             path picture={%
                 \ifthenelse{\equal{#1}{}}{}{%
                     \node at (path picture bounding box.center){%
-                        \ifthenelse{\equal{#3}{}}{%
-                            \includegraphics[%
-                                width=#2\dimexpr#4mm\relax,%
-                                height=#2\dimexpr#4mm\relax]{#1}%
-                        }{%
-                            \includegraphics[%
-                                width=#2\dimexpr#4mm\relax,%
-                                height=#2\dimexpr#4mm\relax,%
-                                decodearray={\customdecodearray}]{#1}%
-                        }%
+                        \includegraphics[%
+                            width=#2\dimexpr#3mm\relax,%
+                            height=#2\dimexpr#3mm\relax]{#1}%
                     };%
                 }%
             }%
-        ] (0,0) circle (\dimexpr#4mm-#5mm/2\relax);%
+        ] (0,0) circle (\dimexpr#3mm-#4mm/2\relax);%
     \end{tikzpicture}%
 }%
 
@@ -234,10 +200,9 @@
 % Main CV function that prepares the entire layout.
 % Parameter 1 (optional):   Path to avatar resource.
 % Parameter 2 (optional):   Avatar scale.
-% Parameter 3 (optional):   Avatar color in RGB.
-% Parameter 4:              Name.
-% Parameter 5:              Description.
-\NewDocumentEnvironment{cv}{O{} O{2} O{} m m}{%
+% Parameter 3:              Name.
+% Parameter 4:              Description.
+\NewDocumentEnvironment{cv}{O{} O{2} m m}{%
     \relscale{\cvscale}%
     \fontfamily{\cvfont}%
     
@@ -248,13 +213,13 @@
     \begin{minipage}{\dimexpr(\cvavatarradius mm + \cvavatarradius mm)}%
         \protect\ifthenelse{\equal{#1}{}}%
             {\drawcircle{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
-            {\drawcircle[resources/#1][#2][#3]{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
+            {\drawcircle[resources/#1][#2]{\cvavatarradius}{\cvavatarborderwidth}{cvcolor}{cvavatarbordercolor}}%
     \end{minipage}%
     \hspace{\cvheaderoffset mm}%
     \begin{minipage}{\dimexpr(\linewidth + \timelinespace mm - \cvavatarradius mm - \cvheaderoffset mm)}%
-        \textscale{\cvheadertitlefontscale}{#4}%
+        \textscale{\cvheadertitlefontscale}{#3}%
         \cvseparator[3]%
-        \textscale{\cvheadersubtitlefontscale}{#5}%
+        \textscale{\cvheadersubtitlefontscale}{#4}%
     \end{minipage}%
     
     \columnratio{\cvcolumnratio}%
@@ -270,9 +235,8 @@
 % Groups events, items and skills inside one block.
 % Parameter 1 (optional):   Path to icon resource.
 % Parameter 2 (optional):   Icon scale.
-% Parameter 3 (optional):   Icon color in RGB.
-% Parameter 4:              Section title.
-\NewDocumentCommand{\cvsection}{O{} O{1} O{cviconcolor} m}{%
+% Parameter 3:              Section title.
+\NewDocumentCommand{\cvsection}{O{} O{1} m}{%
     \ifthenelse{\equal{\iscvsidebar}{0}}{%
         \vspace{\cvmainspace mm}%
         \hspace{-\timelinespace mm}%
@@ -280,11 +244,11 @@
         \begin{minipage}{\dimexpr(\cvmainbubbleradius mm + \cvmainbubbleradius mm)}%
             \ifthenelse{\equal{#1}{}}%
                 {\protect\drawcircle{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
-                {\protect\drawcircle[resources/#1][#2][#3]{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
+                {\protect\drawcircle[resources/#1][#2]{\cvmainbubbleradius}{\cvmainbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
         \hspace{\dimexpr(\timelinespace mm - \cvmainbubbleradius mm)}%
         \begin{minipage}{\linewidth}%
-            \textscale{\cvsectionfontscale}{\textbf{#4}}%
+            \textscale{\cvsectionfontscale}{\textbf{#3}}%
         \end{minipage}%
         \cvseparator%
     }{%
@@ -293,11 +257,11 @@
         \begin{minipage}{\dimexpr(\cvsidebarbubbleradius mm + \cvsidebarbubbleradius mm)}%
             \protect\ifthenelse{\equal{#1}{}}%
                 {\drawcircle{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
-                {\drawcircle[resources/#1][#2][#3]{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
+                {\drawcircle[resources/#1][#2]{\cvsidebarbubbleradius}{\cvsidebarbubbleborderwidth}{cvcolor}{cvbordercolor}}%
         \end{minipage}%
         \hspace{\cvsidebaroffset mm}%
         \begin{minipage}{\dimexpr(\linewidth - \cvsidebarbubbleradius mm - \cvsidebaroffset mm)}%
-            \textscale{\cvsectionfontscale}{\textbf{#4}}%
+            \textscale{\cvsectionfontscale}{\textbf{#3}}%
         \end{minipage}%
         \cvseparator%
     }%
@@ -431,4 +395,3 @@
   \addtocounter{footnote}{-1}%
   \endgroup%
 }%
-

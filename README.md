@@ -15,7 +15,7 @@ BubbleCV is designed to effectively showcase your skills, work experience, educa
 
 - Easy Extensibility – You have the option to upload your own [resources](resources/), such as icons, to further personalize your CV and make it unique to your style.
 
-- Configurable Colors – The bubbles and icons in the template can be easily changed with a single line of code. By adjusting the RGB color parameters, you can customize the appearance to suit your preferences.
+- Configurable Colors – The bubbles in the template can be easily changed with a single line of code. By adjusting the RGB color parameters, you can customize the appearance to suit your preferences.
 
 - Functionalities for Content Management – The template provides functions that facilitate the easy addition of features and the management of content, ensuring a seamless CV creation process.
 
@@ -25,9 +25,9 @@ Open the template in [Overleaf](https://www.overleaf.com/latex/templates/bubblec
 
 ## Functions
 
-- `\begin{cv}[<avatar>][<avatar_scale>][<avatar_color>]{<name>}{<description>}`: Creates the main CV environment with optional parameters for avatar image, scale, and color. It also includes the name and description of the individual.
+- `\begin{cv}[<avatar>][<avatar_scale>]{<name>}{<description>}`: Creates the main CV environment with optional parameters for avatar image and scale. It also includes the name and description of the individual.
 
-- `\cvsection[<icon>][<icon_scale>][<icon_color>]{<section_title>}`: Creates a new section with an optional icon, scale, and color parameters. It helps in organizing different parts of the CV, such as Profile, Work Experience, Education, etc.
+- `\cvsection[<icon>][<icon_scale>]{<section_title>}`: Creates a new section with an optional icon and scale parameters. It helps in organizing different parts of the CV, such as Profile, Work Experience, Education, etc.
 
 - `\begin{cvevent}[<start_date>][<end_date>]`: Begins a new work experience or educational event. Optional start and end dates can be specified to indicate the duration of the event.
 
